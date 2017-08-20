@@ -6,7 +6,9 @@
 // extract from chromium source code by @liuwayong
 
 const b = new Brain();
-(async function() { await b.newSession()})();
+(async function() {
+  await b.newSession();
+})();
 
 let frameCounter = 0;
 (function() {
@@ -658,32 +660,42 @@ let frameCounter = 0;
         );
 
         const obstacle_xPos = nearestObstacle.xPos;
-        const obstacle_yPos = nearestObstacle.yPos;
-        const obstacle_height = nearestObstacle.typeConfig.height;
-        const obstacle_width = nearestObstacle.width;
 
-        const obstacle = this.horizon.obstacles[0];
-        const inputs = [
-          obstacle_xPos,
-          obstacle_yPos,
-          obstacle_width,
-          obstacle_height,
-          this.currentSpeed
-        ];
+        if (obstacle_xPos < 200) {
+          const obstacle_yPos = nearestObstacle.yPos;
+          const obstacle_height = nearestObstacle.typeConfig.height;
+          const obstacle_width = nearestObstacle.width;
 
-        // Ask NN to get data
-        const action = await b.processInputs(inputs);
+          const obstacle = this.horizon.obstacles[0];
+          const inputs = [
+            obstacle_xPos,
+            obstacle_yPos,
+            obstacle_width,
+            obstacle_height,
+            this.currentSpeed
+          ];
 
-        if (action < 0.4) {
-          if (!this.tRex.isDucking()) {
-            this.tRex.setDuck(true);
+          // Ask NN to get data
+          const action = await b.processInputs(inputs);
+          console.log('action ', action);
+
+          const jumping = action[0];
+          const ducking = action[1];
+
+          if(jumping > 0.8) {
+            this.tRex.startJump(this.currentSpeed);
+          } 
+
+          if(ducking > 0.8) {
+            console.log('ducking!');
+            if (!this.tRex.isDucking()) {
+              this.tRex.setDuck(true);
+            }
+          } else {
+            if (this.tRex.isDucking()) {
+              this.tRex.setDuck(false);
+            }
           }
-        } else if (action < 0.6) {
-          if (this.tRex.isDucking()) {
-            this.tRex.setDuck(false);
-          }
-        } else {
-          this.tRex.startJump(this.currentSpeed);
         }
       }
     },

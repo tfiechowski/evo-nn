@@ -22,15 +22,19 @@ app.use(bodyParser.json());
 // ----- Setting up neural network
 const generateNetwork = () => {
   const inputLayer = new Layer(5);
-  const hiddenLayer = new Layer(15);
-  const outputLayer = new Layer(1);
+  const hiddenLayer1 = new Layer(7);
+  const hiddenLayer2 = new Layer(7);
+  const hiddenLayer3 = new Layer(7);
+  const outputLayer = new Layer(2);
 
-  inputLayer.project(hiddenLayer);
-  hiddenLayer.project(outputLayer);
+  inputLayer.project(hiddenLayer1);
+  hiddenLayer1.project(hiddenLayer2);
+  hiddenLayer2.project(hiddenLayer3);
+  hiddenLayer3.project(outputLayer);
 
   const myNetwork = new Network({
     input: inputLayer,
-    hidden: [hiddenLayer],
+    hidden: [hiddenLayer1, hiddenLayer2, hiddenLayer3],
     output: outputLayer,
   });
 
@@ -72,7 +76,12 @@ const saveGeneration = async () => {
     );
   }
 
-  console.log('\tStats:', [maxScore, avgScore, medianScore, stdDevScore]);
+  console.log(
+    '\tStats:',
+    [maxScore, avgScore, medianScore, stdDevScore],
+    '\t',
+    genomeScores.join(', ')
+  );
 };
 
 // ----- Server routes
@@ -85,19 +94,27 @@ app.post('/new-session', async (req, res) => {
     console.log('\tSessionID: ', currentSession.id);
   }
 
-  es = new EvoSynaptic(genomeNumbers, generateNetwork(), 0.5, 0.5);
+  es = new EvoSynaptic(genomeNumbers, generateNetwork(), 0.1, 0.05);
 
   genomeCounter = 0;
   generationCounter = 1;
 
   console.log(' |> Creating generation: ', generationCounter);
+  es.printGenomes();
 
   res.send(true);
 });
 
 // Getting the data in real time
 app.post('/activate', (req, res) => {
-  res.send(es.activate(genomeCounter, req.body.data));
+  // Normalization of inputs
+  const normalizationValues = [200, 105, 46, 50, 13];
+  const inputs = req.body.data.map(
+    (input, index) => input / normalizationValues[index]
+  );
+  // console.log('inputs ', inputs.map(input => input.toFixed(8)).join(', '));
+
+  res.send(es.activate(genomeCounter, inputs) || JSON.stringify(false));
 });
 
 app.post('/next-genome', async (req, res) => {
@@ -113,6 +130,7 @@ app.post('/next-genome', async (req, res) => {
     es.createNewGeneration();
     generationCounter += 1;
     console.log(' |> Creating generation: ', generationCounter);
+    es.printGenomes();
   }
 
   res.send(true);

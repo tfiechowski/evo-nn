@@ -1,13 +1,15 @@
+const IP = 'http://192.168.0.11:3000';
+
 class Brain {
   newSession() {
-    return $.ajax('http://localhost:3000/new-session', {
+    return $.ajax(`${IP}/new-session`, {
       contentType: 'application/json',
       type: 'POST',
     });
   }
 
   processInputs(inputs) {
-    return $.ajax('http://localhost:3000/activate', {
+    return $.ajax(`${IP}/activate`, {
       data: JSON.stringify({ data: inputs }),
       contentType: 'application/json',
       type: 'POST',
@@ -15,7 +17,7 @@ class Brain {
   }
 
   nextGenome(score) {
-    return $.ajax('http://localhost:3000/next-genome', {
+    return $.ajax(`${IP}/next-genome`, {
       data: JSON.stringify({ score }),
       contentType: 'application/json',
       type: 'POST',
