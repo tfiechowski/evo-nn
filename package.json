@@ -1,0 +1,22 @@
+{
+  "name": "evo-nn",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/tfiechowski/evo-nn.git",
+  "author": "Tomasz Fiechowski <tomasz.fiechowski@outlook.com>",
+  "license": "MIT",
+  "dependencies": {
+    "babel-eslint": "^7.2.3",
+    "body-parser": "^1.17.2",
+    "cors": "^2.8.4",
+    "eslint": "^4.5.0",
+    "eslint-plugin-class-property": "^1.0.6",
+    "eslint-plugin-react": "^7.2.1",
+    "express": "^4.15.4",
+    "lodash": "^4.17.4",
+    "mathjs": "^3.16.1",
+    "mysql2": "^1.4.1",
+    "sequelize": "^4.6.0",
+    "synaptic": "^1.0.12"
+  }
+}
