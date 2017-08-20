@@ -113,10 +113,10 @@ let frameCounter = 0;
     ACCELERATION: 0.001,
     BG_CLOUD_SPEED: 0.2,
     BOTTOM_PAD: 10,
-    CLEAR_TIME: 3000,
+    CLEAR_TIME: 2000,
     CLOUD_FREQUENCY: 0.5,
     GAMEOVER_CLEAR_TIME: 750,
-    GAP_COEFFICIENT: 0.6,
+    GAP_COEFFICIENT: 0.3,
     GRAVITY: 0.6,
     INITIAL_JUMP_VELOCITY: 12,
     INVERT_FADE_DURATION: 12000,
@@ -1612,10 +1612,30 @@ let frameCounter = 0;
       type: 'PTERODACTYL',
       width: 46,
       height: 40,
+      yPos: [100, 75, 50, 25], // Variable height.
+      yPosMobile: [100, 50], // Variable height mobile.
+      multipleSpeed: 999,
+      minSpeed: 0,
+      minGap: 150,
+      collisionBoxes: [
+        new CollisionBox(15, 15, 16, 5),
+        new CollisionBox(18, 21, 24, 6),
+        new CollisionBox(2, 14, 4, 3),
+        new CollisionBox(6, 10, 4, 7),
+        new CollisionBox(10, 8, 6, 9)
+      ],
+      numFrames: 2,
+      frameRate: 1000 / 6,
+      speedOffset: 0.8
+    },
+    {
+      type: 'PTERODACTYL',
+      width: 46,
+      height: 40,
       yPos: [100, 75, 50], // Variable height.
       yPosMobile: [100, 50], // Variable height mobile.
       multipleSpeed: 999,
-      minSpeed: 8.5,
+      minSpeed: 0,
       minGap: 150,
       collisionBoxes: [
         new CollisionBox(15, 15, 16, 5),
